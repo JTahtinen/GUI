@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"charconv": "cpp",
+			"ios": "cpp",
+			"istream": "cpp",
+			"ostream": "cpp",
+			"xstring": "cpp"
+		},
+		"makefile.configureOnOpen": true
+	}
+}
