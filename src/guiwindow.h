@@ -39,4 +39,5 @@ float getGUIWindowLeft(const GUIWindow *guiWindow);
 float getGUIWindowRight(const GUIWindow *guiWindow);
 float getGUIWindowBottom(const GUIWindow *guiWindow);
 float getGUIWindowTop(const GUIWindow *guiWindow);
+jadel::Rectf getGUIWindowRect(const GUIWindow *guiWindow);
 bool isGUIWindowHeaderHovered(const GUIWindow *guiWindow);

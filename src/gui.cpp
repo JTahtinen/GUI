@@ -175,30 +175,27 @@ static void handleIdleState()
     {
         bool hookDragResize = false;
         V2 mousePos = getMouseProjectedPos();
-        float left = getGUIWindowLeft(&TOP_WINDOW);
-        float right = getGUIWindowRight(&TOP_WINDOW);
-        float bottom = getGUIWindowBottom(&TOP_WINDOW);
-        float top = getGUIWindowTop(&TOP_WINDOW);
+        jadel::Rectf topWindowRect = getGUIWindowRect(&TOP_WINDOW);
         static float dragResizeRadius = 0.01f;
-        if (jadel::pointfWithinRectf(mousePos, jadel::Rectf(left, bottom, right, top)))
+        if (jadel::pointfWithinRectf(mousePos, topWindowRect))
         {
             dragResizeSideFlags = 0;
-            if (JADEL_IS_VAL_BETWEEN(mousePos.x, left, left + dragResizeRadius))
+            if (JADEL_IS_VAL_BETWEEN(mousePos.x, topWindowRect.x0, topWindowRect.x0 + dragResizeRadius))
             {
                 dragResizeSideFlags |= CLICKABLE_SIDE_LEFT;
                 hookDragResize = true;
             }
-            else if (JADEL_IS_VAL_BETWEEN(mousePos.x, right - dragResizeRadius, right))
+            else if (JADEL_IS_VAL_BETWEEN(mousePos.x, topWindowRect.x1 - dragResizeRadius, topWindowRect.x1))
             {
                 dragResizeSideFlags |= CLICKABLE_SIDE_RIGHT;
                 hookDragResize = true;
             }
-            if (JADEL_IS_VAL_BETWEEN(mousePos.y, bottom, bottom + dragResizeRadius))
+            if (JADEL_IS_VAL_BETWEEN(mousePos.y, topWindowRect.y0, topWindowRect.y0 + dragResizeRadius))
             {
                 dragResizeSideFlags |= CLICKABLE_SIDE_BOTTOM;
                 hookDragResize = true;
             }
-            else if (JADEL_IS_VAL_BETWEEN(mousePos.y, top - dragResizeRadius, top))
+            else if (JADEL_IS_VAL_BETWEEN(mousePos.y, topWindowRect.y1 - dragResizeRadius, topWindowRect.y1))
             {
                 dragResizeSideFlags |= CLICKABLE_SIDE_TOP;
                 hookDragResize = true;
@@ -224,11 +221,9 @@ static void handleIdleState()
     {
         GUIWindow *guiWindow = getGUIWindow(i);
         bool windowHovered = isClickableHovered(&guiWindow->totalArea);
-        bool headerHovered = isGUIWindowHeaderHovered(guiWindow);
-        // bool clientHovered = isClickableHovered(&guiWindows[i].client);
-        if (windowHovered || headerHovered)
+        if (windowHovered)
         {
-            if (headerHovered)
+            if (isGUIWindowHeaderHovered(guiWindow))
             {
                 guiWindow->isHighlighted = true;
             }
@@ -260,11 +255,6 @@ static void handleIdleState()
             setGUIWindowColor(jadel::Color(1.0f, winR, 0, 0).toU32(), &guiWindows[i]);
         }
     }
-    /*
-    for (int i = 0; i < numSliders; ++i)
-    {
-        updateGUISlider(&sliders[i]);
-    }*/
 }
 
 static void handleDragResizeState()
@@ -316,31 +306,11 @@ void updateGUI()
 
 void renderGUI()
 {
-    /*
-    if (sliders[0].valueChanged || sliders[1].valueChanged || sliders[2].valueChanged)
-    {
-        for (int i = 0; i < numGUIWindows; ++i)
-        {
-            setGUIWindowColor(jadel::Color(1.0f, winR, winG, winB).toU32(), &guiWindows[i]);
-        }
-    }*/
     // Render in reverse order, as lower indices are on the foreground
     for (int i = numGUIWindows - 1; i >= 0; --i)
     {
         renderGUIWindow(getGUIWindow(i));
     }
-    /*
-        for (int i = 0; i < numSliders; ++i)
-        {
-            GUISlider *slider = &sliders[i];
-            float knobRadius = slider->clickable.dimensions.x * 0.5f;
-
-            renderClickable(&slider->clickable);
-            renderBorder(slider->clickable.position, slider->clickable.dimensions, knobRadius, 0xffffffff);
-            V2 sliderBottomLeft = getClickableBottomLeft(&slider->clickable);
-            V2 knobPos(slider->clickable.position.x, (sliderBottomLeft.y + slider->internalValue * slider->clickable.dimensions.y) - knobRadius);
-            renderRect(jadel::Rectf(knobPos.x, knobPos.y, knobPos.x + 2.0f * knobRadius, knobPos.y + 2.0f * knobRadius), 0xffff0000);
-        }*/
 }
 
 void testFunc()
@@ -358,16 +328,6 @@ void initGUI()
     winR = 0.6f;
     winG = 0.6f;
     winB = 0.6f;
-    /* GUISlider sliderR;
-     GUISlider sliderG;
-     GUISlider sliderB;
-     initGUISlider(V2(0.0f, 0.5f), 0.2f, 0, 1.0f, &winR, &sliderR);
-     initGUISlider(V2(0.3f, 0.5f), 0.2f, 0, 1.0f, &winG, &sliderG);
-     initGUISlider(V2(0.6f, 0.5f), 0.2f, 0, 1.0f, &winB, &sliderB);
-     registerGUISlider(sliderR);
-     registerGUISlider(sliderG);
-     registerGUISlider(sliderB);
- */
     for (int i = 0; i < 5; ++i)
     {
         GUIWindow *guiWindow = registerGUIWindow(-0.5f + (float)i * 0.1f, -0.5f + (float)i * 0.1f, jadel::Color(1, winR, winG, winB).toU32());

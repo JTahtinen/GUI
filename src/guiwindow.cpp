@@ -78,7 +78,7 @@ void handleGUIWindowInput(GUIWindow *guiWindow)
     for (int i = 0; i < guiWindow->numButtons; ++i)
     {
         Button *button = &guiWindow->buttons[i];
-        if(isClickableHovered(&button->clickable))
+        if (isClickableHovered(&button->clickable))
         {
             buttonCurrentColor = buttonHoverColor;
             if (isMouseLeftClicked)
@@ -117,7 +117,6 @@ void renderGUIWindow(GUIWindow *guiWindow)
     renderClickable(&guiWindow->header);
     pushClippingPlane(getClickableWorldArea(&guiWindow->client));
     renderClickable(&guiWindow->client);
-    
 
     for (int i = 0; i < guiWindow->numButtons; ++i)
     {
@@ -128,7 +127,6 @@ void renderGUIWindow(GUIWindow *guiWindow)
         pushClippingPlane(getClickableWorldArea(&guiWindow->sliders[i].clickable));
         renderSlider(&guiWindow->sliders[i]);
         popClippingPlane();
-
     }
     popClippingPlane();
     popClippingPlane();
@@ -226,6 +224,13 @@ float getGUIWindowBottom(const GUIWindow *guiWindow)
 float getGUIWindowTop(const GUIWindow *guiWindow)
 {
     float result = getClickableWorldTop(&guiWindow->totalArea);
+    return result;
+}
+
+jadel::Rectf getGUIWindowRect(const GUIWindow *guiWindow)
+{
+    jadel::Rectf result(getGUIWindowLeft(guiWindow), getGUIWindowBottom(guiWindow),
+                        getGUIWindowRight(guiWindow), getGUIWindowTop(guiWindow));
     return result;
 }
 
